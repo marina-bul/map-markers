@@ -1,12 +1,8 @@
 import { createStore } from 'vuex'
+import markers from './modules/markers'
 
-export const store = createStore({
-  state: () => ({
-    example: 'Hello from Vuex!',
-  }),
-  mutations: {
-    setExample (state, payload: string) {
-      state.example = payload
-    },
+export default createStore({
+  modules: {
+    markers,
   },
 })

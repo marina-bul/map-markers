@@ -6,7 +6,7 @@ interface GeocodingResponse {
 
 class GeocodingService {
   private readonly API_URL = 'https://geocode.maps.co/reverse';
-  private readonly API_KEY = '681dd603c3440121498002cuzf8d024';
+  private readonly API_KEY = import.meta.env.VITE_GEOCODE_API_KEY;
 
   async getAddressFromCoordinates (lat: number, lng: number): Promise<string> {
     try {

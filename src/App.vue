@@ -1,5 +1,5 @@
 <template>
-  <div class="app" :data-theme="theme">
+  <div class="app">
     <AppHeader />
     <main>
       <router-view />
@@ -8,17 +8,8 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
   import AppHeader from '@/components/AppHeader.vue';
 
-  const theme = ref('dark');
-
-  onMounted(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      theme.value = savedTheme;
-    }
-  });
 </script>
 
 <style lang="scss">

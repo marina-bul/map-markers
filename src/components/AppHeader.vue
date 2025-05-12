@@ -22,7 +22,7 @@
   padding: 1rem;
   height: var(--header-height);
   color: var(--accent-color);
-  background: var(--header-color);
+  background: var(--secondary-bg);
   box-shadow: var(--card-shadow);
 
   nav {
@@ -31,7 +31,7 @@
   }
 
   .nav-link {
-    color: var(--text-secondary);
+    color: var(--accent-color);
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;

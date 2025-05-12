@@ -1,6 +1,6 @@
 import vuetify from './vuetify'
 import router from '../router'
-import { store } from '../store'
+import store from '../store'
 
 import type { App } from 'vue'
 

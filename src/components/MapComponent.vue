@@ -27,58 +27,45 @@
   import { onMounted, ref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import L from 'leaflet';
-  import { backendService } from '@/services/BackendService';
+
+  // import { backendService } from '@/services/BackendService';
   import { geocodingService } from '@/services/GeocodingService';
+  import { useMap } from '@/composables/map';
+  import { useStore } from 'vuex';
+
   import type { RouteParams } from '@/router';
+  import type { Marker } from '@/types/types';
 
   import 'leaflet/dist/leaflet.css';
 
-  interface Marker {
-    id: string;
-    name: string;
-    lat: number;
-    lng: number;
-    address: string;
-  }
-
   const mapRef = ref<HTMLElement | null>(null);
   const isAddingMode = ref(false);
-  const isDialogOpen = ref(false)
-  const newMarker = ref({ name: '', lat: 0, lng: 0 })
+  const isDialogOpen = ref(false);
+  const newMarker = ref({ name: '', lat: 0, lng: 0 });
+
   const route = useRoute();
   const router = useRouter();
+  const { initMap, addMarker } = useMap(mapRef);
+  const store = useStore();
 
-  let map: L.Map | null = null;
-  const markers: L.Marker[] = [];
   const markerData: Record<string, Marker> = {};
-
-  const initMap = () => {
-    if (!mapRef.value) return;
-
-    map = L.map(mapRef.value).setView([44.7866, 20.4489], 12)
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-    }).addTo(map);
-
-    map.on('click', handleMapClick);
-    loadMarkers();
-  };
+  let map = <L.Map | null>(null);
 
   const loadMarkers = async () => {
-    const savedMarkers = await backendService.getMarkers();
-    markers.forEach(marker => marker.remove());
+    await store.dispatch('markers/loadMarkers');
+    const markers = store.getters['markers/markersList'];
 
-    savedMarkers.forEach(marker => {
-      const newMarker = L.marker([marker.lat, marker.lng])
-        .addTo(map!)
-        .bindPopup(`<strong>${marker.name}</strong><p>${marker.address}</p>`);
+    markers.forEach((marker: Marker) => {
+      const popupContent = `<strong>${marker.name}</strong><p>${marker.address}</p>`;
+      const addedMarker = addMarker([marker.lat, marker.lng], popupContent);
 
-      newMarker.on('click', () => {
-        router.push(`/map/${marker.id}`);
-      });
+      if(addedMarker) {
+        addedMarker.on('click', () => {
+          store.dispatch('markers/selectMarker', marker.id);
+          router.push(`/map/${marker.id}`);
+        });
+      }
 
-      markers.push(newMarker);
       markerData[marker.id] = marker;
     });
   };
@@ -105,7 +92,7 @@
         address,
       };
 
-      await backendService.saveMarker(marker);
+      await store.dispatch('markers/addMarker', marker);
       await loadMarkers();
       isAddingMode.value = false;
     } catch (error) {
@@ -122,16 +109,19 @@
   };
 
   onMounted(() => {
-    initMap();
+    map = initMap();
+
+    if(!map) return;
+
+    map.on('click', handleMapClick);
+    loadMarkers();
   });
 
   watch(() => (route.params as RouteParams).id, newId => {
     if (!newId || !map) return;
 
-    const markerEntry = Object.entries(markerData).find(([id]) => id === newId);
-    if (markerEntry) {
-      const markerInfo = markerEntry[1];
-      map.setView([markerInfo.lat, markerInfo.lng], 15);
+    if (markerData[newId]) {
+      map.setView([markerData[newId].lat, markerData[newId].lng], 15);
     }
   });
 </script>

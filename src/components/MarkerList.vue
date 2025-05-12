@@ -4,63 +4,50 @@
     <div v-if="markers.length === 0" class="empty-state">
       Нет добавленных маркеров
     </div>
-    <ul v-else>
-      <li
+    <v-list v-else class="list">
+      <v-list-item
         v-for="marker in markers"
         :key="marker.id"
-        :class="{ active: selectedMarkerId === marker.id }"
-        @click="selectMarker(marker)"
+        class="marker"
+        :class="{ 'selected': marker.id === selectedMarkerId }"
+        @click="selectMarker(marker.id)"
       >
-        <div class="marker-info">
-          <div class="marker-header">
-            <h5>{{ marker.name }}</h5>
-            <v-btn icon size="small" variant="text" @click.stop="deleteMarker(marker.id)">
-              <v-icon color="red">mdi-trash-can-outline</v-icon>
-            </v-btn>
-          </div>
-          <p>{{ marker.address }}</p>
-        </div>
-      </li>
-    </ul>
+        <v-list-item-title class="marker-header">
+          <h5 class="marker-title">{{ marker.name }}</h5>
+          <v-btn icon size="small" variant="text" @click.stop="deleteMarker(marker.id)">
+            <v-icon color="red">mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </v-list-item-title>
+        <v-list-item-subtitle>{{ marker.address }}</v-list-item-subtitle>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import { computed } from 'vue';
+  import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
   import { backendService } from '@/services/BackendService';
 
-  interface Marker {
-    id: string;
-    name: string;
-    lat: number;
-    lng: number;
-    address: string;
-  }
-
-  const markers = ref<Marker[]>([]);
-  const selectedMarkerId = ref<string | null>(null);
+  const store = useStore();
   const router = useRouter();
 
-  const loadMarkers = async () => {
-    markers.value = await backendService.getMarkers();
-  };
+  const markers = computed(() => store.getters['markers/markersList']);
+  const selectedMarkerId = computed(() => store.state.markers.selectedMarkerId);
 
-  const selectMarker = (marker: Marker) => {
-    selectedMarkerId.value = marker.id;
-    router.push(`/map/${marker.id}`);
+  const selectMarker = (markerId: string) => {
+    store.dispatch('markers/selectMarker', markerId);
+    router.push(`/map/${markerId}`);
   };
 
   const deleteMarker = async (id: string) => {
     await backendService.deleteMarker(id);
-    await loadMarkers();
     if (selectedMarkerId.value === id) {
-      selectedMarkerId.value = null;
       router.push('/map');
     }
   };
 
-  onMounted(loadMarkers);
 </script>
 
 <style lang="scss" scoped>
@@ -73,7 +60,7 @@
 
   h3 {
     margin: 0 0 1rem;
-    color: var(--text-primary);
+    color: var(--accent-color);
   }
 
   .empty-state {
@@ -82,39 +69,28 @@
     padding: 2rem;
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
+  .list {
     margin: 0;
+    color: var(--text-secondary);
+    background-color: transparent;
+  }
 
-    li {
-      padding: 0.75rem;
-      border-bottom: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: background-color 0.3s;
+  .marker {
+    padding-bottom: 0.75rem;
+  }
 
-      &:hover {
-        background: var(--secondary-bg);
-      }
+  .marker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      &.active {
-        background: var(--accent-color);
-        color: white;
-      }
-
-      .marker-info {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-
-      }
-
-      .marker-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .marker-title {
+      font-size: 1rem;
     }
+  }
+
+  .selected {
+    background-color: var(--hovered-bg);
   }
 }
 </style>

@@ -28,13 +28,15 @@
   import { computed } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
-  import { backendService } from '@/services/BackendService';
 
   const store = useStore();
   const router = useRouter();
 
   const markers = computed(() => store.getters['markers/markersList']);
-  const selectedMarkerId = computed(() => store.state.markers.selectedMarkerId);
+  const selectedMarkerId = computed(() => {
+    const selected = store.getters['markers/selectedMarker'];
+    return selected ? selected.id : ''
+  });
 
   const selectMarker = (markerId: string) => {
     store.dispatch('markers/selectMarker', markerId);
@@ -42,7 +44,7 @@
   };
 
   const deleteMarker = async (id: string) => {
-    await backendService.deleteMarker(id);
+    await store.dispatch('markers/removeMarker', id);
     if (selectedMarkerId.value === id) {
       router.push('/map');
     }

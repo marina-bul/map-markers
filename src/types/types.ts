@@ -25,3 +25,22 @@ export interface GeocodingResponse {
 export interface AddressResponse extends GeocodingResponse {
   shortAddress: string
 }
+
+interface SuccessBackendResponce<T> {
+  status: 200
+  data: T
+}
+
+interface FailedBackendResponce {
+  status: 500
+  error: Error
+}
+
+export type BackendResponce<T> = SuccessBackendResponce<T> | FailedBackendResponce
+
+export interface BackendService {
+  loadMarkers: () => void;
+  getMarkers: () => Promise<Marker[]>;
+  saveMarker: (marker: Omit<Marker, 'id'>) => Promise<BackendResponce<{ id: string }>>;
+  removeMarker (id: string): Promise<void>
+}

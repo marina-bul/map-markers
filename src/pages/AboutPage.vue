@@ -73,7 +73,7 @@
       margin: 0 auto;
       background: var(--secondary-bg);
       border-radius: 8px;
-      color: var(--text-primary);
+      color: var(--text-secondary);
       height: 100%;
       overflow-y: auto;
 
@@ -84,7 +84,7 @@
 
       h3 {
         margin: 2rem 0 1rem;
-        color: var(--text-primary);
+        color: var(--text-secondary);
       }
 
       p {

@@ -38,6 +38,7 @@
   const newMarkerName = ref('');
 
   const router = useRouter();
+  const store = useStore();
   const {
     mode,
     newMarkerCoords,
@@ -45,26 +46,26 @@
     addMarker,
     switchMapMode,
     changeCenterCoords,
-  } = useMap(mapRef);
-  const store = useStore();
+    removeMarker,
+  } = useMap();
+
 
   const isDialogOpen = ref(false);
+  const storedMarkers = computed(() => store.getters['markers/markersList'])
   const selectedMarker = computed(() => store.getters['markers/selectedMarker'])
 
   const addMarkerToMap = (marker: Marker) => {
-    const popupContent = `<strong>${marker.name}</strong><p>${marker.address}</p>`;
     const handleMarkerClick = () => {
       store.dispatch('markers/selectMarker', marker.id);
-      router.push(`/map/${marker.id}`);
     }
 
-    addMarker([marker.lat, marker.lng], handleMarkerClick, popupContent);
+    addMarker(marker, handleMarkerClick);
   };
 
   const createMarker = async () => {
     isDialogOpen.value = false;
 
-    const markerInfo = { name: newMarkerName, ...newMarkerCoords };
+    const markerInfo = { name: newMarkerName.value, ...newMarkerCoords.value };
     const resp = await store.dispatch('markers/addMarker', markerInfo);
 
     if(resp) {
@@ -77,14 +78,17 @@
     switchMapMode()
   }
 
+  const handleMapClick = () => {
+    isDialogOpen.value = true
+  }
+
   onMounted(() => {
     const loadMarkers = async () => {
       await store.dispatch('markers/setMarkers');
-      const storedMarkers: Marker[] = store.getters['markers/markersList']
-      storedMarkers.forEach((marker: Marker) => addMarkerToMap(marker));
+      storedMarkers.value.forEach((marker: Marker) => addMarkerToMap(marker));
     };
 
-    initMap();
+    initMap(mapRef, handleMapClick);
     loadMarkers();
   });
 
@@ -93,8 +97,23 @@
     () => {
       if (selectedMarker.value) {
         changeCenterCoords(selectedMarker.value.lat, selectedMarker.value.lng);
+        router.push(`/map/${selectedMarker.value.id}`);
       }
     });
+
+  watch(
+    () => storedMarkers.value,
+    (newMarkers, oldMarkers) => {
+      if (oldMarkers) {
+        const removedMarker = oldMarkers.find((marker: Marker) =>
+          !newMarkers.some((m: Marker) => m.id === marker.id)
+        );
+        if (removedMarker) {
+          removeMarker(removedMarker.id);
+        }
+      }
+    }
+  );
 
 </script>
 

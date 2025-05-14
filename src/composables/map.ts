@@ -8,10 +8,11 @@ const DEFAULT_CENTER_COORDS: LatLngTuple = [44.7866, 20.4489];
 const DEFAULT_ZOOM = 12
 const MAX_ZOOM = 15
 
-export function useMap (container: Ref<HTMLElement | null>) {
+export function useMap () {
   let map = <L.Map | null>(null);
   const mode: Ref<MapMode> = ref('view');
   const newMarkerCoords: Ref<Pick<Marker, 'lat' | 'lng'> | null> = ref(null);
+  const renderedMarkers = new Map<string, L.Marker>();
 
   const changeCenterCoords = (lat: number, lng: number) => {
     if (!map) {
@@ -22,34 +23,7 @@ export function useMap (container: Ref<HTMLElement | null>) {
     map.setView([lat, lng], MAX_ZOOM);
   }
 
-  const addMarker = (
-    latLng: [number, number],
-    onMarkerClick: () => void,
-    popupContent?: string,
-  ) => {
-
-    if (!map) {
-      console.error('Карта не инициализирована. Вызовите initMap() перед добавлением маркеров.');
-      return
-    }
-
-    const marker = L.marker(latLng).addTo(map);
-    if (popupContent) marker.bindPopup(popupContent);
-
-    marker.on('click', () => {
-      const latlng = marker.getLatLng();
-      changeCenterCoords(latlng.lat, latlng.lng);
-      onMarkerClick()
-    });
-  };
-
-  const handleMapClick = (event: L.LeafletMouseEvent) => {
-    if (mode.value === 'view') return;
-
-    newMarkerCoords.value = { lat: event.latlng.lat, lng: event.latlng.lng };
-  };
-
-  const initMap = () => {
+  const initMap = (container: Ref<HTMLElement | null>, onMapClick?: () => void) => {
     if (!container.value) return null;
 
     map = L.map(container.value).setView( DEFAULT_CENTER_COORDS, DEFAULT_ZOOM);
@@ -58,11 +32,46 @@ export function useMap (container: Ref<HTMLElement | null>) {
       attribution: '© OpenStreetMap contributors',
     }).addTo(map);
 
-    map.on('click', handleMapClick);
+    map.on('click', (event: L.LeafletMouseEvent) => {
+      if (mode.value === 'view') return;
+
+      newMarkerCoords.value = { lat: event.latlng.lat, lng: event.latlng.lng };
+      if(onMapClick) onMapClick()
+    });
   };
 
   const switchMapMode = () => {
     mode.value = mode.value === 'view' ? 'edit' : 'view'
+  };
+
+  const addMarker = (
+    markerInfo: Marker,
+    onMarkerClick: () => void,
+  ) => {
+    if (!map) {
+      console.error('Карта не инициализирована. Вызовите initMap() перед добавлением маркеров.');
+      return
+    }
+
+    const marker = L.marker([markerInfo.lat, markerInfo.lng]).addTo(map);
+    const popupContent = `<strong>${markerInfo.name}</strong><p>${markerInfo.address}</p>`;
+
+    marker.bindPopup(popupContent);
+
+    marker.on('click', () => {
+      changeCenterCoords(markerInfo.lat, markerInfo.lng);
+      onMarkerClick()
+    });
+
+    renderedMarkers.set(markerInfo.id, marker);
+  };
+
+  const removeMarker = (markerId: string) => {
+    const marker = renderedMarkers.get(markerId);
+    if (marker) {
+      marker.remove();
+      renderedMarkers.delete(markerId);
+    }
   };
 
   return {
@@ -72,5 +81,6 @@ export function useMap (container: Ref<HTMLElement | null>) {
     addMarker,
     switchMapMode,
     changeCenterCoords,
+    removeMarker,
   };
 }

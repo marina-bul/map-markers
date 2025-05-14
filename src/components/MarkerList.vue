@@ -43,9 +43,10 @@
     router.push(`/map/${markerId}`);
   };
 
-  const deleteMarker = async (id: string) => {
-    await store.dispatch('markers/removeMarker', id);
-    if (selectedMarkerId.value === id) {
+  const deleteMarker = async (markerId: string) => {
+    await store.dispatch('markers/removeMarker', markerId);
+
+    if (selectedMarkerId.value === markerId) {
       router.push('/map');
     }
   };

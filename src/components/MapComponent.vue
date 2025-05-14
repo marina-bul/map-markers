@@ -3,20 +3,22 @@
     <div ref="mapRef" class="map" />
     <div class="controls">
       <v-btn class="main-btn" round @click="switchMapMode">
-        {{ mode ==='edit' ? "Отмена" : "Добавить маркер" }}
+        {{ mode ==='edit' ? t('base.cancel') : t('map-page.add-marker') }}
       </v-btn>
     </div>
 
     <v-dialog v-model="isDialogOpen" max-width="400">
       <v-card>
-        <v-card-title>Введите название маркера</v-card-title>
+        <v-card-title>{{ t('map-page.type-marker-name') }}</v-card-title>
         <v-card-text>
-          <v-text-field v-model="newMarkerName" label="Название" />
+          <v-text-field v-model="newMarkerName" :label="t('base.name')" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="isDialogOpen = false">Отмена</v-btn>
-          <v-btn :disabled="!newMarkerName" @click="createMarker">Сохранить</v-btn>
+          <v-btn @click="handleCancel">{{ t('base.cancel') }}</v-btn>
+          <v-btn :disabled="!newMarkerName" @click="handleCreateMarker">
+            {{ t('base.save') }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -26,9 +28,10 @@
 <script setup lang="ts">
   import { computed, onMounted, ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex';
+  import { useI18n } from 'vue-i18n';
 
   import { useMap } from '@/composables/map';
-  import { useStore } from 'vuex';
 
   import type { Marker } from '@/types/types';
 
@@ -37,6 +40,7 @@
   const mapRef = ref<HTMLElement | null>(null);
   const newMarkerName = ref('');
 
+  const { t } = useI18n();
   const router = useRouter();
   const store = useStore();
   const {
@@ -62,7 +66,7 @@
     addMarker(marker, handleMarkerClick);
   };
 
-  const createMarker = async () => {
+  const handleCreateMarker = async () => {
     isDialogOpen.value = false;
 
     const markerInfo = { name: newMarkerName.value, ...newMarkerCoords.value };
@@ -71,11 +75,16 @@
     if(resp) {
       addMarkerToMap(resp)
     } else {
-      alert('Не удалось добавить маркер')
+      alert(t('map-page.marker-not-added'))
     }
 
     newMarkerName.value = ''
     switchMapMode()
+  }
+
+  const handleCancel = () => {
+    isDialogOpen.value = false;
+    newMarkerName.value = ''
   }
 
   const handleMapClick = () => {

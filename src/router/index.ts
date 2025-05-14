@@ -18,12 +18,14 @@ const router = createRouter({
       path: '/map',
       name: 'map',
       component: MapPage,
-    },
-    {
-      path: '/map/:id',
-      name: 'map-marker',
-      component: MapPage,
-      props: true,
+      children: [
+        {
+          path: ':id',
+          name: 'map-marker',
+          component: MapPage,
+          props: true,
+        },
+      ],
     },
   ],
 })

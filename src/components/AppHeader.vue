@@ -5,13 +5,20 @@
       <h1>SquareGPS</h1>
     </div>
     <nav>
-      <router-link class="nav-link" to="/">О задании</router-link>
-      <router-link class="nav-link" to="/map">Карта</router-link>
+      <router-link class="nav-link" to="/">{{ t('nav.about') }}</router-link>
+      <router-link active-class="nav-link-active" class="nav-link" to="/map">
+        {{ t('nav.map') }}
+      </router-link>
+      <LangSwitcher />
     </nav>
   </header>
 </template>
 
 <script setup lang="ts">
+  import LangSwitcher from '@/components/LangSwitcher.vue';
+  import { useI18n } from 'vue-i18n';
+
+  const { t } = useI18n()
 
 </script>
 
@@ -19,6 +26,7 @@
 .app-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
   height: var(--header-height);
   color: var(--accent-color);
@@ -31,18 +39,20 @@
   }
 
   .nav-link {
-    color: var(--accent-color);
+    color: var(--text-secondary);
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
 
     &:hover {
-      background: var(--secondary-bg);
+      border-color: var(--accent-color);
     }
 
-    &.router-link-active {
+    &.router-link-active,
+    &.nav-link-active {
       color: var(--accent-color);
+      border-color: var(--accent-color);
     }
   }
 }

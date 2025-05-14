@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "about": "About task",
+    "map": "Map"
+  },
+  "map-page": {
+    "add-marker": "Add marker",
+    "type-marker-name": "Enter marker name",
+    "marker-not-added": "Failed to add marker",
+    "markers-title": "Markers",
+    "empty-marker-list": "No markers added"
+  },
+  "base": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "name": "Name"
+  },
+  "about-page": {
+    "title": "SquareGPS Test Task",
+    "description-1": "You need to create an application using ",
+    "description-2": ". The application header should contain a menu with 2 items: About task and Map. The main part of the application should display the content of the sections.",
+    "about-section": {
+      "title": "About Task Section",
+      "description": "This section should contain the text of this task, styled similarly."
+    },
+    "map-section": {
+      "title": "Map Section",
+      "description": "The screen should display a map and a list:",
+      "requirements": {
+        "add-marker": "When clicking the add button, the map should enter marker addition mode: a marker should appear at the click location, and a record with the point address should appear in the list.",
+        "geocoding-api": "To search for an address, you can use any free geocoding API, for example:",
+        "geocoding-error": "If the address is not found, an error should be displayed and the marker should not be added to the list.",
+        "marker-click": "When clicking on a marker, the corresponding list entry should be highlighted.",
+        "list-click": "When clicking on a list entry, the map should center on the marker.",
+        "local-storage": "Markers should be stored locally and persist after page reload.",
+        "url-id": "The selected marker ID should be displayed in the address bar."
+      }
+    },
+    "backend-note": "Local data storage should be organized as a service emulating a backend. (A Backend class is required that pseudo-asynchronously saves data to localStorage)",
+    "additional": {
+      "title": "Additionally:",
+      "mobile": "Consider mobile device display.",
+      "localization": "Implement localization.",
+      "testing": "Write 1 unit test for any component using jest."
+    },
+    "note": "Reminder: the test task is designed to demonstrate the ability to write good modular code, as well as the ability to use the specified technologies and more. This code should make you proud."
+  }
+}

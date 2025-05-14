@@ -1,8 +1,8 @@
 <template>
   <div class="marker-list">
-    <h3>Маркеры</h3>
+    <h3>{{ t('map-page.markers-title') }}</h3>
     <div v-if="markers.length === 0" class="empty-state">
-      Нет добавленных маркеров
+      {{ t('empty-marker-list') }}
     </div>
     <v-list v-else class="list">
       <v-list-item
@@ -28,9 +28,12 @@
   import { computed } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
+
 
   const store = useStore();
   const router = useRouter();
+  const { t } = useI18n()
 
   const markers = computed(() => store.getters['markers/markersList']);
   const selectedMarkerId = computed(() => {

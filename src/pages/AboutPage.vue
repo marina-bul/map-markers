@@ -1,69 +1,62 @@
 <template>
   <div class="about-page">
-    <h2>Тестовое задание SquareGPS</h2>
+    <h2>{{ t('about-page.title') }}</h2>
     <p>
-      Необходимо с помощью <strong>Vuejs, Vuex, VueRouter, Vuetify</strong> написать приложение. Хэдер приложения должен содержать меню из 2-х пунктов: О задании и Карта. В основной
-      части приложения должно отображаться содержимое разделов.
+      {{ t('about-page.description-1') }}<strong>Vuejs, Vuex, VueRouter, Vuetify</strong>{{ t('about-page.description-2') }}
     </p>
 
-    <h3>Раздел "О задании"</h3>
+    <h3>{{ t('about-page.about-section.title') }}</h3>
     <p>
-      В разделе должен быть текст этого задания, сверстанный аналогично.
+      {{ t('about-page.about-section.description') }}
     </p>
 
-    <h3>Раздел "Карта"</h3>
+    <h3>{{ t('about-page.map-section.title') }}</h3>
     <p>
-      На экране должны быть карта и список:
+      {{ t('about-page.map-section.description') }}
     </p>
     <ol>
       <li>
-        При клике на кнопку добавления, карта должна перейти в режим добавления
-        маркера: в месте клика должен появится маркер, а в списке - запись с адресом
-        точки.
+        {{ t('about-page.map-section.requirements.add-marker') }}
         <ul>
           <li>
-            Для поиска адреса можно использовать любое бесплатное API для
-            геокодирования, например:
+            {{ t('about-page.map-section.requirements.geocoding-api') }}
             <a href="https://geocode.maps.co/" target="_blank">https://geocode.maps.co/</a>.
           </li>
           <li>
-            В случае, если адрес не найден, необходимо вывести ошибку и не
-            добавлять маркер в список.
+            {{ t('about-page.map-section.requirements.geocoding-error') }}
           </li>
         </ul>
       </li>
-      <li>При клике на маркер должна подсвечиваться запись в списке.</li>
-      <li>При клике на запись в списке карта должна центрироваться на маркере.</li>
-      <li>Маркеры должны храниться локально и не пропадать после перезагрузки страницы.</li>
-      <li>В адресной строке должен отображаться id выбранного маркера.</li>
+      <li>{{ t('about-page.map-section.requirements.marker-click') }}</li>
+      <li>{{ t('about-page.map-section.requirements.list-click') }}</li>
+      <li>{{ t('about-page.map-section.requirements.local-storage') }}</li>
+      <li>{{ t('about-page.map-section.requirements.url-id') }}</li>
     </ol>
     <p>
-      Локальное хранение данных должно быть организовано в виде сервиса,
-      эмулирующего бекенд. (Необходим класс Backend, который псевдо-асинхронно
-      сохраняет данные в localStorage)
+      {{ t('about-page.backend-note') }}
     </p>
 
-    <h4>Дополнительно:</h4>
+    <h4>{{ t('about-page.additional.title') }}</h4>
     <ol>
       <li>
-        Продумать отображение на мобильных устройствах.
+        {{ t('about-page.additional.mobile') }}
       </li>
       <li>
-        Предусмотреть локализацию.
+        {{ t('about-page.additional.localization') }}
       </li>
       <li>
-        Необходимо с помощью jest написть 1 модульный тест на любой компонент.
+        {{ t('about-page.additional.testing') }}
       </li>
     </ol>
 
-    <p>
-      Напоминание: тестовое задание призвано показать умение писать хороший модульный код, а также умение пользоваться указанными технологиями и не только. Этим кодом нужно гордиться.
-    </p>
+    <p class="accent-text">{{ t('about-page.note') }}</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-  //
+  import { useI18n } from 'vue-i18n';
+
+  const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>
@@ -92,6 +85,11 @@
         line-height: 1.6;
       }
 
+      .accent-text {
+        font-weight: 600;
+        color: var(--accent-color)
+      }
+
       ol {
         padding-left: 1.5rem;
         margin-bottom: 1rem;
@@ -105,6 +103,10 @@
           margin-top: 0.5rem;
           padding-left: 1.5rem;
         }
+      }
+
+      a {
+        color: var(--accent-color);
       }
   }
 </style>

@@ -44,22 +44,28 @@ const markers: Module<MarkersState, RootState> = {
     },
 
     async addMarker ({ commit }, markerInfo: Omit<Marker, 'id' | 'address'>) {
-      const markerAddress = await geocodingService.getAddressFromCoordinates(markerInfo.lat, markerInfo.lng);
-      const newMarker: Omit<Marker, 'id'> = {
-        name: markerInfo.name,
-        lat: markerInfo.lat,
-        lng: markerInfo.lng,
-        address: markerAddress,
-      };
-      const backendResp = await backendService.saveMarker(newMarker);
+      try {
+        const markerAddress = await geocodingService.getAddressFromCoordinates(markerInfo.lat, markerInfo.lng);
 
-      if(backendResp.status === 200) {
-        const addedMarker: Marker = { ...newMarker, id: backendResp.data.id };
-        commit('ADD_MARKER', addedMarker);
+        const newMarker: Omit<Marker, 'id'> = {
+          name: markerInfo.name,
+          lat: markerInfo.lat,
+          lng: markerInfo.lng,
+          address: markerAddress,
+        };
 
-        return addedMarker
-      } else {
-        console.error('Error adding marker: ', backendResp.error)
+        const backendResp = await backendService.saveMarker(newMarker);
+
+        if (backendResp.status === 200) {
+          const addedMarker: Marker = { ...newMarker, id: backendResp.data.id };
+          commit('ADD_MARKER', addedMarker);
+          return addedMarker;
+        } else {
+          throw backendResp.error;
+        }
+      } catch (error) {
+        console.error('Error in addMarker:', error);
+        throw error;
       }
     },
 

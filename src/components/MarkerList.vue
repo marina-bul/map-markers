@@ -2,7 +2,7 @@
   <div class="marker-list">
     <h3>{{ t('map-page.markers-title') }}</h3>
     <div v-if="markers.length === 0" class="empty-state">
-      {{ t('empty-marker-list') }}
+      {{ t('map-page.empty-marker-list') }}
     </div>
     <v-list v-else class="list">
       <v-list-item
@@ -18,7 +18,7 @@
             <v-icon color="red">mdi-trash-can-outline</v-icon>
           </v-btn>
         </v-list-item-title>
-        <v-list-item-subtitle>{{ marker.address }}</v-list-item-subtitle>
+        <p class="marker-address">{{ marker.address }}</p>
       </v-list-item>
     </v-list>
   </div>
@@ -97,6 +97,11 @@
     .marker-title {
       font-size: 1rem;
     }
+  }
+
+  .marker-address {
+    font-size: 12px;
+    opacity: 50%;
   }
 
   .selected {

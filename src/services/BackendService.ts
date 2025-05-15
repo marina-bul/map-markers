@@ -45,11 +45,14 @@ class LSBackendService implements BackendService {
   }
 
   async removeMarker (id: string): Promise<void> {
-    return new Promise(resolve => {
-      this.markers = this.markers.filter(m => m.id !== id);
+    this.markers = this.markers.filter(m => m.id !== id);
+    try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.markers));
-      setTimeout(() => {resolve()}, 1000);
-    });
+      await delay(DEFAULT_DELAY);
+    } catch(error) {
+      await delay(DEFAULT_DELAY);
+      throw error;
+    }
   }
 }
 

@@ -10,13 +10,24 @@
     <v-dialog v-model="isDialogOpen" max-width="400">
       <v-card>
         <v-card-title>{{ t('map-page.type-marker-name') }}</v-card-title>
-        <v-card-text>
+        <template v-if="isLoading">
+          <v-card style="padding: 2.5rem;">
+            <v-progress-linear
+              color="var(--accent-color)"
+              height="6"
+              indeterminate
+              rounded
+            />
+          </v-card>
+
+        </template>
+        <v-card-text v-else>
           <v-text-field v-model="newMarkerName" :label="t('base.name')" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="handleCancel">{{ t('base.cancel') }}</v-btn>
-          <v-btn :disabled="!newMarkerName" @click="handleCreateMarker">
+          <v-btn :disabled="isLoading" @click="handleCancel">{{ t('base.cancel') }}</v-btn>
+          <v-btn :disabled="!newMarkerName || isLoading" @click="handleCreateMarker">
             {{ t('base.save') }}
           </v-btn>
         </v-card-actions>
@@ -53,8 +64,8 @@
     removeMarker,
   } = useMap();
 
-
   const isDialogOpen = ref(false);
+  const isLoading = ref(false);
   const storedMarkers = computed(() => store.getters['markers/markersList'])
   const selectedMarker = computed(() => store.getters['markers/selectedMarker'])
 
@@ -67,17 +78,22 @@
   };
 
   const handleCreateMarker = async () => {
-    isDialogOpen.value = false;
-
+    isLoading.value = true;
     const markerInfo = { name: newMarkerName.value, ...newMarkerCoords.value };
-    const resp = await store.dispatch('markers/addMarker', markerInfo);
+    try {
+      const resp = await store.dispatch('markers/addMarker', markerInfo);
 
-    if(resp) {
-      addMarkerToMap(resp)
-    } else {
-      alert(t('map-page.marker-not-added'))
+      if (resp) {
+        addMarkerToMap(resp);
+      } else {
+        alert(t('map-page.marker-not-added'));
+      }
+    } catch (error) {
+      alert(error || t('map-page.marker-not-added'));
     }
 
+    isDialogOpen.value = false;
+    isLoading.value = false;
     newMarkerName.value = ''
     switchMapMode()
   }

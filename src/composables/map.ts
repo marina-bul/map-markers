@@ -6,7 +6,7 @@ type MapMode = 'view' | 'edit';
 
 const DEFAULT_CENTER_COORDS: LatLngTuple = [44.7866, 20.4489];
 const DEFAULT_ZOOM = 12
-const MAX_ZOOM = 15
+const MAX_ZOOM = 19
 
 export function useMap () {
   let map = <L.Map | null>(null);

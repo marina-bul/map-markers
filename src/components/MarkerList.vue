@@ -47,9 +47,10 @@
   };
 
   const deleteMarker = async (markerId: string) => {
+    const currentSelectedId = selectedMarkerId.value;
     await store.dispatch('markers/removeMarker', markerId);
 
-    if (selectedMarkerId.value === markerId) {
+    if (currentSelectedId === markerId) {
       router.push('/map');
     }
   };

@@ -30,7 +30,7 @@ jobs:
         git config --global user.email "bragina_marina@mail.ru"
 
     - name: Install env vars
-      run: echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> .env
+      run: echo "VITE_GEOCODE_API_KEY=${{ secrets.VITE_GEOCODE_API_KEY }}" >> .env
 
     - name: Build the project
       run: npm run build-only

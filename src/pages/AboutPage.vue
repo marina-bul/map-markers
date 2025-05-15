@@ -61,52 +61,56 @@
 
 <style lang="scss" scoped>
   .about-page {
-      padding: 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-      background: var(--secondary-bg);
-      border-radius: 8px;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--secondary-bg);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    height: 100%;
+    overflow-y: auto;
+
+    @media (max-width: 480px) {
+      padding: 1rem;
+    }
+
+    h2 {
+      margin-bottom: 2rem;
+      color: var(--accent-color);
+    }
+
+    h3 {
+      margin: 2rem 0 1rem;
       color: var(--text-secondary);
-      height: 100%;
-      overflow-y: auto;
+    }
 
-      h2 {
-        margin-bottom: 2rem;
-        color: var(--accent-color);
-      }
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
 
-      h3 {
-        margin: 2rem 0 1rem;
-        color: var(--text-secondary);
-      }
+    .accent-text {
+      font-weight: 600;
+      color: var(--accent-color)
+    }
 
-      p {
-        margin-bottom: 1rem;
+    ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+
+      li {
+        margin-bottom: 0.5rem;
         line-height: 1.6;
       }
 
-      .accent-text {
-        font-weight: 600;
-        color: var(--accent-color)
-      }
-
-      ol {
+      ul {
+        margin-top: 0.5rem;
         padding-left: 1.5rem;
-        margin-bottom: 1rem;
-
-        li {
-          margin-bottom: 0.5rem;
-          line-height: 1.6;
-        }
-
-        ul {
-          margin-top: 0.5rem;
-          padding-left: 1.5rem;
-        }
       }
+    }
 
-      a {
-        color: var(--accent-color);
-      }
+    a {
+      color: var(--accent-color);
+    }
   }
 </style>

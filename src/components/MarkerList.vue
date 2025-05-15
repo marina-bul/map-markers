@@ -58,15 +58,19 @@
 
 <style lang="scss" scoped>
 .marker-list {
-  border-radius: 8px;
-  box-shadow: var(--card-shadow);
   padding: 1rem;
   height: 100%;
   overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
 
   h3 {
     margin: 0 0 1rem;
     color: var(--accent-color);
+
+    @media (max-width: 360px) {
+      margin: 0;
+    }
   }
 
   .empty-state {

@@ -25,7 +25,8 @@
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
-      grid-template-rows: 1fr 300px;
+      grid-template-rows: 2fr 1fr;
+      padding: 0;
     }
 
     .map-section {

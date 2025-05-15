@@ -33,6 +33,12 @@
   background: var(--secondary-bg);
   box-shadow: var(--card-shadow);
 
+  .app-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   nav {
     display: flex;
     gap: 1rem;
@@ -55,12 +61,6 @@
       border-color: var(--accent-color);
     }
   }
-}
-
-.app-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 </style>

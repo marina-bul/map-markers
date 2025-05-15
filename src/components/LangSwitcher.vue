@@ -12,7 +12,7 @@
       </v-btn>
     </template>
 
-    <v-list class="lang-list" theme="light">
+    <v-list class="lang-list">
       <v-list-item
         v-for="(label, code) in languages"
         :key="code"

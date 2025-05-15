@@ -8,11 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppHeader: typeof import('./components/AppHeader.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    DesktopHeader: typeof import('./components/DesktopHeader.vue')['default']
     LangSwitcher: typeof import('./components/LangSwitcher.vue')['default']
     MapComponent: typeof import('./components/MapComponent.vue')['default']
     MarkerList: typeof import('./components/MarkerList.vue')['default']
+    MobileHeader: typeof import('./components/MobileHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

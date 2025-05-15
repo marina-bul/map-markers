@@ -146,6 +146,7 @@
     }
 
     .main-btn {
+      color: var(--text-primary);
       background-color: var(--accent-color);
     }
   }

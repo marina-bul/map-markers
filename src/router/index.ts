@@ -7,7 +7,7 @@ export interface RouteParams {
 }
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/map-markers/'),
   routes: [
     {
       path: '/',

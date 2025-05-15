@@ -11,6 +11,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/map-markers/',
   plugins: [
     VueRouter({
       dts: 'src/typed-router.d.ts',
@@ -40,7 +41,6 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/map-markers/',
   optimizeDeps: {
     exclude: [
       'vuetify',

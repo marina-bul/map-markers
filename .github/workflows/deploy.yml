@@ -1,0 +1,42 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Set up Git user
+      run: |
+        git config --global user.name "marina-bul"
+        git config --global user.email "bragina_marina@mail.ru"
+
+    - name: Install env vars
+      run: echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" >> .env
+
+    - name: Build the project
+      run: pnpm build-only
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist

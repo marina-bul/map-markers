@@ -40,6 +40,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/map-markers/',
   optimizeDeps: {
     exclude: [
       'vuetify',

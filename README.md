@@ -21,7 +21,7 @@
    git clone https://github.com/marina-bul/map-markers
    ```
 
-2. **Navigate to the project directory:**
+2. **Перейдите в папку проекта:**
 
    ```bash
    cd map-markers
@@ -33,7 +33,7 @@
     pnpm install
     ```
 
-    or for npm
+    или для npm
 
     ```bash
     npm install
@@ -43,9 +43,9 @@
 4. **Запустите проект:**
 
     ```bash
-    pnpm run dev
+    pnpm dev
     ```
-    or for npm
+    или для npm
 
     ```bash
     npm run dev

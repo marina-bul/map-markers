@@ -5,7 +5,11 @@ import store from '../store'
 
 import type { App } from 'vue'
 
-await loadLocaleMessages('ru')
+async function loadTranslates () {
+  await loadLocaleMessages('ru');
+}
+
+loadTranslates()
 
 export function registerPlugins (app: App) {
   app

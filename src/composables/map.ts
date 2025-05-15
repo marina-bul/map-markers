@@ -1,5 +1,8 @@
 import { ref, type Ref } from 'vue';
 import L, { type LatLngTuple } from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import type { Marker } from '@/types/types';
 
 type MapMode = 'view' | 'edit';
@@ -13,6 +16,15 @@ export function useMap () {
   const mode: Ref<MapMode> = ref('view');
   const newMarkerCoords: Ref<Pick<Marker, 'lat' | 'lng'> | null> = ref(null);
   const renderedMarkers = new Map<string, L.Marker>();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  delete (L.Icon.Default.prototype as any)._getIconUrl
+
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: markerIcon2x,
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+  })
 
   const changeCenterCoords = (lat: number, lng: number) => {
     if (!map) {
